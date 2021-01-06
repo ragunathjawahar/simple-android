@@ -4,19 +4,26 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.webkit.JavascriptInterface
+import android.webkit.WebView
 import android.widget.FrameLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
+import javax.inject.Provider
 
 class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), ReportsUi {
 
   @Inject
   lateinit var effectHandler: ReportsEffectHandler
+
+  @Inject
+  lateinit var webViewDataProvider: WebViewDataProvider
 
   private val delegate by unsafeLazy {
     val uiRenderer = ReportsUiRenderer(this)
@@ -39,9 +46,11 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
       return
     }
 
-    webView.settings.javaScriptEnabled = true
-
     context.injector<Injector>().inject(this)
+
+    webView.settings.javaScriptEnabled = true
+    webView.addJavascriptInterface(webViewDataProvider, "injectedObject")
+    WebView.setWebContentsDebuggingEnabled(true)
   }
 
   override fun onAttachedToWindow() {
@@ -64,7 +73,8 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   override fun showReport(html: String) {
     showWebview(true)
-    webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
+//    webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
+    webView.loadUrl("file:///android_asset/data.html")
   }
 
   override fun showNoReportsAvailable() {
@@ -79,5 +89,15 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   interface Injector {
     fun inject(target: ReportsScreen)
+  }
+
+  class WebViewDataProvider @Inject constructor(
+      private val currentFacilityProvider: Provider<Facility>
+  ) {
+
+    @JavascriptInterface
+    fun currentFacility(): Int {
+      return 15
+    }
   }
 }
