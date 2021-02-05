@@ -255,8 +255,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       return
     }
 
-    binding = ScreenManualPatientEntryBinding.bind(this)
-
     context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener { router.pop() }
