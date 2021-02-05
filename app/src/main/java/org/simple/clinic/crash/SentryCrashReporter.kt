@@ -59,14 +59,12 @@ class SentryCrashReporter @Inject constructor(
 
   @SuppressLint("CheckResult")
   private fun identifyCurrentCountryCode() {
-    appConfigRepository
-        .currentCountryObservable()
-        .map { it.get().isoCountryCode }
-        .subscribe(
-            {
-              Sentry.getContext().addTag("countryCode", it.toString())
-            },
-            { report(it) })
+    val countryCode = appConfigRepository
+        .currentCountry()
+        .get().isoCountryCode
+
+    Sentry.getContext().addTag("countryCode", countryCode)
+    report(Throwable(countryCode))
   }
 
   override fun dropBreadcrumb(breadcrumb: Breadcrumb) {
