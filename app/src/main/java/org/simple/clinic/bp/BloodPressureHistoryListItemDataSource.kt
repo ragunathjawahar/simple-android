@@ -49,14 +49,14 @@ class BloodPressureHistoryListItemDataSource(
     // is not present in the source data source
     val loadParamsForDatabaseSource = LoadRangeParams(params.startPosition - 1, params.loadSize)
     source.loadRange(loadParamsForDatabaseSource, object : LoadRangeCallback<BloodPressureMeasurement>() {
-      override fun onResult(measurements: MutableList<BloodPressureMeasurement>) {
-        val measurementListItems = convertToBloodPressureHistoryListItems(measurements)
-        val data = if (params.startPosition == 0) {
+      override fun onResult(data: List<BloodPressureMeasurement>) {
+        val measurementListItems = convertToBloodPressureHistoryListItems(data)
+        val listItems = if (params.startPosition == 0) {
           listOf(NewBpButton) + measurementListItems
         } else {
           measurementListItems
         }
-        callback.onResult(data)
+        callback.onResult(listItems)
       }
     })
   }
@@ -72,22 +72,22 @@ class BloodPressureHistoryListItemDataSource(
         params.placeholdersEnabled
     )
     source.loadInitial(loadParamsForDatabaseSource, object : LoadInitialCallback<BloodPressureMeasurement>() {
-      override fun onResult(measurements: MutableList<BloodPressureMeasurement>, position: Int, totalCount: Int) {
+      override fun onResult(data: List<BloodPressureMeasurement>, position: Int, totalCount: Int) {
         // Adding 1 to the total count so that BloodPressureHistoryListItemDataSource knows that we are
         // adding a another item on top the measurements total count
         val finalTotalCount = totalCount + 1
 
-        val measurementListItems = convertToBloodPressureHistoryListItems(measurements)
-        val data = if (params.requestedStartPosition == 0) {
+        val measurementListItems = convertToBloodPressureHistoryListItems(data)
+        val listItems = if (params.requestedStartPosition == 0) {
           listOf(NewBpButton) + measurementListItems
         } else {
           measurementListItems
         }
 
-        callback.onResult(data, position, finalTotalCount)
+        callback.onResult(listItems, position, finalTotalCount)
       }
 
-      override fun onResult(measurements: MutableList<BloodPressureMeasurement>, position: Int) {
+      override fun onResult(data: List<BloodPressureMeasurement>, position: Int) {
         // Nothing happens here, source data source results are passed to onResult(data, position, totalCount)
       }
     })
