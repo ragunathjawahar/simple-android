@@ -78,6 +78,10 @@
     <item name="colorOnToolbarPrimary">@color/white</item>
   </style>
 
+  <style name="Theme.Simple.Splash">
+    <item name="android:windowBackground">@drawable/splash_layout</item>
+  </style>
+
   <!-- TODO: Remove this once `BottomSheetActivity` usage is replaced by `BottomSheetDialogFragment` -->
   <style name="Theme.Simple.BottomSheetActivity">
     <item name="android:windowIsTranslucent">true</item>
