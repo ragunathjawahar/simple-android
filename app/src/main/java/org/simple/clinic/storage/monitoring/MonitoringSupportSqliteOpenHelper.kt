@@ -45,7 +45,7 @@ class MonitoringSupportSqliteOpenHelper(
 
   class MonitoringSupportSqliteDatabase(
       private val wrapped: SupportSQLiteDatabase
-  ): SupportSQLiteDatabase {
+  ) : SupportSQLiteDatabase {
     override fun close() {
       wrapped.close()
     }
@@ -194,5 +194,25 @@ class MonitoringSupportSqliteOpenHelper(
     override fun getAttachedDbs(): MutableList<Pair<String, String>> = wrapped.attachedDbs
 
     override fun isDatabaseIntegrityOk() = wrapped.isDatabaseIntegrityOk
+  }
+
+  data class DaoMetadata(
+      val daoName: String,
+      val methodName: String,
+      val start: Int,
+      val end: Int
+  ) {
+
+    companion object {
+      fun parse(csv: String): Map<String, DaoMetadata> {
+        return csv
+            .split('\n')
+            .asSequence()
+            .filterNot { it.isBlank() }
+            .map { it.split(',') }
+            .map { (dao, method, start, end) -> DaoMetadata(dao, method, start.toInt(), end.toInt()) }
+            .associateBy { "${it.daoName}.${it.methodName}" }
+      }
+    }
   }
 }
