@@ -190,7 +190,15 @@ class MonitoringSupportSqliteOpenHelper(
       val results = block()
       val timeTaken = System.currentTimeMillis() - now
 
-      Timber.tag("SearchPerf").i(throwable, "Time taken: $timeTaken ms")
+      val appDaoCall = throwable
+          .stackTrace
+          .firstOrNull { it.className.startsWith("org.simple.clinic.") && it.fileName.endsWith("_Impl.java") }
+
+      if (appDaoCall != null) {
+        val metadataKey = "${appDaoCall.className}.${appDaoCall.methodName}"
+        Timber.tag("SearchPerf").i("Time taken for $metadataKey: $timeTaken ms")
+      }
+
       return results
     }
   }
