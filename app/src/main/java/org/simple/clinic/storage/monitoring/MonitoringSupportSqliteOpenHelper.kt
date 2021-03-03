@@ -1,6 +1,7 @@
 package org.simple.clinic.storage.monitoring
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteTransactionListener
 import android.os.CancellationSignal
@@ -13,8 +14,21 @@ import timber.log.Timber
 import java.util.Locale
 
 class MonitoringSupportSqliteOpenHelper(
+    context: Context,
     private val wrapped: SupportSQLiteOpenHelper
 ) : SupportSQLiteOpenHelper {
+
+  private val daoMetadata: Map<String, DaoMetadata>
+
+  init {
+    val assetManager = context.assets
+    val metadata = assetManager
+        .open("db_metadata.csv")
+        .reader()
+        .readText()
+
+    daoMetadata = DaoMetadata.parse(metadata)
+  }
 
   override fun close() {
     wrapped.close()
@@ -35,12 +49,13 @@ class MonitoringSupportSqliteOpenHelper(
   }
 
   class Factory(
+      private val context: Context,
       private val wrapped: SupportSQLiteOpenHelper.Factory
   ) : SupportSQLiteOpenHelper.Factory {
 
     override fun create(
         configuration: SupportSQLiteOpenHelper.Configuration
-    ) = MonitoringSupportSqliteOpenHelper(wrapped.create(configuration))
+    ) = MonitoringSupportSqliteOpenHelper(context, wrapped.create(configuration))
   }
 
   class MonitoringSupportSqliteDatabase(

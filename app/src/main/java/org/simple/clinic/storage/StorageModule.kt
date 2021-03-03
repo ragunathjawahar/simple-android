@@ -49,8 +49,10 @@ class StorageModule {
   }
 
   @Provides
-  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory {
-    return MonitoringSupportSqliteOpenHelper.Factory(AppSqliteOpenHelperFactory())
+  fun sqliteOpenHelperFactory(
+      application: Application
+  ): SupportSQLiteOpenHelper.Factory {
+    return MonitoringSupportSqliteOpenHelper.Factory(application, AppSqliteOpenHelperFactory())
   }
 
   @Provides
