@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteStatement
+import timber.log.Timber
 import java.util.Locale
 
 class MonitoringSupportSqliteOpenHelper(
@@ -100,38 +101,65 @@ class MonitoringSupportSqliteOpenHelper(
     }
 
     override fun query(query: String?): Cursor {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.query(query)
     }
 
     override fun query(query: String?, bindArgs: Array<out Any>?): Cursor {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.query(query, bindArgs)
     }
 
     override fun query(query: SupportSQLiteQuery?): Cursor {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.query(query)
     }
 
     override fun query(query: SupportSQLiteQuery?, cancellationSignal: CancellationSignal?): Cursor {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.query(query, cancellationSignal)
     }
 
     override fun insert(table: String?, conflictAlgorithm: Int, values: ContentValues?): Long {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.insert(table, conflictAlgorithm, values)
     }
 
     override fun delete(table: String?, whereClause: String?, whereArgs: Array<out Any>?): Int {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.delete(table, whereClause, whereArgs)
     }
 
     override fun update(table: String?, conflictAlgorithm: Int, values: ContentValues?, whereClause: String?, whereArgs: Array<out Any>?): Int {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       return wrapped.update(table, conflictAlgorithm, values, whereClause, whereArgs)
     }
 
     override fun execSQL(sql: String?) {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       wrapped.execSQL(sql)
     }
 
     override fun execSQL(sql: String?, bindArgs: Array<out Any>?) {
+      val throwable = Throwable()
+      throwable.fillInStackTrace()
+      Timber.tag("SearchPerf").i(throwable)
       wrapped.execSQL(sql, bindArgs)
     }
 
