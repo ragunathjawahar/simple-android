@@ -18,7 +18,7 @@ class MonitoringSupportSqliteOpenHelper(
     private val wrapped: SupportSQLiteOpenHelper
 ) : SupportSQLiteOpenHelper {
 
-  private val daoMetadata: Map<String, DaoMetadata>
+  private val daoMetadata: List<DaoMetadata>
 
   init {
     val assetManager = context.assets
@@ -195,8 +195,9 @@ class MonitoringSupportSqliteOpenHelper(
           .firstOrNull { it.className.startsWith("org.simple.clinic.") && it.fileName.endsWith("_Impl.java") }
 
       if (appDaoCall != null) {
-        val metadataKey = "${appDaoCall.className}.${appDaoCall.methodName}"
-        Timber.tag("SearchPerf").i("Time taken for $metadataKey: $timeTaken ms")
+        val className = appDaoCall.fileName.removeSuffix(".java")
+        val lineNumber = appDaoCall.lineNumber
+        Timber.tag("SearchPerf").i("Time taken for ${className}.$lineNumber: $timeTaken ms")
       }
 
       return results
@@ -211,14 +212,14 @@ class MonitoringSupportSqliteOpenHelper(
   ) {
 
     companion object {
-      fun parse(csv: String): Map<String, DaoMetadata> {
+      fun parse(csv: String): List<DaoMetadata> {
         return csv
             .split('\n')
             .asSequence()
             .filterNot { it.isBlank() }
             .map { it.split(',') }
             .map { (dao, method, start, end) -> DaoMetadata(dao, method, start.toInt(), end.toInt()) }
-            .associateBy { "${it.daoName}.${it.methodName}" }
+            .toList()
       }
     }
   }
