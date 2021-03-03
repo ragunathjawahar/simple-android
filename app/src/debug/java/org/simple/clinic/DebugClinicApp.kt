@@ -44,7 +44,7 @@ class DebugClinicApp : ClinicApp() {
 
   override fun onCreate() {
     addStrictModeChecks()
-    Traceur.enableLogging()
+//    Traceur.enableLogging()
     super.onCreate()
     SoLoader.init(this, false)
 
