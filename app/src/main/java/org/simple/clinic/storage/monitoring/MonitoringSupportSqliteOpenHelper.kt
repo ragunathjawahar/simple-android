@@ -41,11 +41,11 @@ class MonitoringSupportSqliteOpenHelper(
   }
 
   override fun getWritableDatabase(): SupportSQLiteDatabase {
-    return MonitoringSupportSqliteDatabase(wrapped.writableDatabase)
+    return MonitoringSupportSqliteDatabase(wrapped.writableDatabase, daoMetadata)
   }
 
   override fun getReadableDatabase(): SupportSQLiteDatabase {
-    return MonitoringSupportSqliteDatabase(wrapped.readableDatabase)
+    return MonitoringSupportSqliteDatabase(wrapped.readableDatabase, daoMetadata)
   }
 
   class Factory(
@@ -59,7 +59,8 @@ class MonitoringSupportSqliteOpenHelper(
   }
 
   class MonitoringSupportSqliteDatabase(
-      private val wrapped: SupportSQLiteDatabase
+      private val wrapped: SupportSQLiteDatabase,
+      private val metadata: List<DaoMetadata>
   ) : SupportSQLiteDatabase {
     override fun close() {
       wrapped.close()
@@ -197,7 +198,12 @@ class MonitoringSupportSqliteOpenHelper(
       if (appDaoCall != null) {
         val className = appDaoCall.fileName.removeSuffix(".java")
         val lineNumber = appDaoCall.lineNumber
-        Timber.tag("SearchPerf").i("Time taken for ${className}.$lineNumber: $timeTaken ms")
+        val daoMetadata = metadata.firstOrNull { it.daoName == className && lineNumber in it.start..it.end }
+        if (daoMetadata != null) {
+          Timber.tag("SearchPerf").i("Time taken for ${daoMetadata.daoName}.${daoMetadata.methodName}: $timeTaken ms")
+        } else {
+          Timber.tag("SearchPerf").i("No metadata found for ${className}.$lineNumber")
+        }
       }
 
       return results
