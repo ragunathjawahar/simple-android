@@ -11,6 +11,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
+import org.simple.clinic.storage.monitoring.MonitoringSupportSqliteOpenHelper
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.user.User
@@ -48,7 +49,9 @@ class StorageModule {
   }
 
   @Provides
-  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory()
+  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory {
+    return MonitoringSupportSqliteOpenHelper.Factory(AppSqliteOpenHelperFactory())
+  }
 
   @Provides
   fun userDao(appDatabase: AppDatabase): User.RoomDao {
