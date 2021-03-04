@@ -26,3 +26,7 @@ PatientRoomDao_Impl,updateAssignedFacilityId,769,813
 PatientRoomDao_Impl,purgeDeleted,816,827
 PatientRoomDao_Impl,purgeDeletedPhoneNumbers,830,841
 PatientRoomDao_Impl,purgeDeletedBusinessIds,844,855
+OverdueAppointmentRoomDao_Impl,overdueAtFacility,66,319
+OverdueAppointmentRoomDao_Impl,overdueAtFacilityDataSource,322,570
+OverdueAppointmentRoomDao_Impl,overdueAtFacilityCount,573,645
+OverdueAppointmentRoomDao_Impl,latestForPatient,648,884
