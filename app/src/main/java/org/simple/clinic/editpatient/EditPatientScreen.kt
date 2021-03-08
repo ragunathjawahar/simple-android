@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -275,9 +274,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
-    ArrayAdapter<String>(context, R.layout.village_typeahead_list_item,  R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
-      colonyOrVillageEditText.setAdapter(adapter)
-    }
+    val adapter = VillageTypeAheadAdapter(context, colonyOrVillageList)
+    colonyOrVillageEditText.setAdapter(adapter)
 
     colonyOrVillageEditText.setOnClickListener {
       colonyOrVillageEditText.showDropDown()
@@ -511,7 +509,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
         PhoneNumberEmpty,
         is PhoneNumberLengthTooShort,
-        is PhoneNumberLengthTooLong -> {
+        is PhoneNumberLengthTooLong,
+        -> {
           hidePhoneNumberError()
         }
 
@@ -529,14 +528,16 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
         BothDateOfBirthAndAgeAdsent,
         AgeExceedsMaxLimit,
-        AgeExceedsMinLimit -> {
+        AgeExceedsMinLimit,
+        -> {
           showAgeEmptyError(false)
         }
 
         DateOfBirthParseError,
         DateOfBirthInFuture,
         DateOfBirthExceedsMaxLimit,
-        DateOfBirthExceedsMinLimit -> {
+        DateOfBirthExceedsMinLimit,
+        -> {
           hideDateOfBirthError()
         }
       }.exhaustive()
