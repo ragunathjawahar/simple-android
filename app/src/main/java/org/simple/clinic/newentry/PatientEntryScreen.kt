@@ -8,7 +8,6 @@ import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RelativeLayout
@@ -32,6 +31,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.editpatient.VillageTypeAheadAdapter
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
@@ -285,7 +285,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
-    ArrayAdapter<String>(context, R.layout.village_typeahead_list_item, R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
+    VillageTypeAheadAdapter(context, colonyOrVillageList).also { adapter ->
       colonyOrVillageEditText.setAdapter(adapter)
     }
 
