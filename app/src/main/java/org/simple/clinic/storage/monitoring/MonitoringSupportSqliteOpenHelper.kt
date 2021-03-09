@@ -201,6 +201,9 @@ class MonitoringSupportSqliteOpenHelper(
         val daoMetadata = metadata.firstOrNull { it.daoName == className && lineNumber in it.start..it.end }
         if (daoMetadata != null) {
           Timber.tag("SearchPerf").i("Time taken for ${daoMetadata.daoName}.${daoMetadata.methodName}: $timeTaken ms")
+          if(daoMetadata.daoName == "OverdueAppointmentRoomDao_Impl") {
+            Timber.tag("SearchPerf").i(throwable)
+          }
         } else {
           Timber.tag("SearchPerf").i("No metadata found for ${className}.$lineNumber")
         }
